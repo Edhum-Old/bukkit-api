@@ -1,0 +1,24 @@
+plugins {
+    id 'java-library'
+}
+
+group 'net.edhum'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = JavaVersion.VERSION_16
+targetCompatibility = JavaVersion.VERSION_16
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+
+    maven {
+        url 'https://papermc.io/repo/repository/maven-public/'
+    }
+}
+
+dependencies {
+    api group: 'net.edhum', name: 'common', version: '1.0-SNAPSHOT'
+
+    compileOnly group: 'io.papermc.paper', name: 'paper-api', version: '1.17-R0.1-SNAPSHOT'
+}

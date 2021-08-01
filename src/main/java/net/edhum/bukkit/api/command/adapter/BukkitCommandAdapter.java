@@ -5,6 +5,7 @@ import com.google.inject.assistedinject.Assisted;
 import net.edhum.common.command.CommandTree;
 import net.edhum.common.command.argument.exception.ArgumentException;
 import net.edhum.common.command.dispatcher.CommandDispatcher;
+import net.edhum.common.command.execution.exceptions.InvalidNodeException;
 import net.edhum.common.command.execution.exceptions.InvalidPermissionException;
 import net.edhum.common.command.execution.exceptions.InvalidRequirementException;
 import net.edhum.common.command.execution.exceptions.InvalidSyntaxException;
@@ -41,19 +42,7 @@ public class BukkitCommandAdapter extends BukkitCommand {
     public boolean execute(@Nonnull CommandSender sender, @Nonnull String commandLabel, @Nonnull String[] args) {
         try {
             this.commandDispatcher.dispatchExecution(this.tree, this.commandSenderProvider.get(sender), args);
-        } catch (ArgumentException e) {
-            e.printStackTrace();
-            sender.sendMessage("Argument Exception");
-        } catch (InvalidRequirementException e) {
-            e.printStackTrace();
-            sender.sendMessage("Invalid condition");
-        } catch (InvalidPermissionException e) {
-            e.printStackTrace();
-        } catch (InvalidSyntaxException e) {
-            e.printStackTrace();
-            sender.sendMessage("Invalid Syntax Exception");
-        } catch (UnsupportedSenderException e) {
-            // TODO: 01/08/2021 Eventually log it
+        } catch (ArgumentException | InvalidRequirementException | InvalidPermissionException | InvalidSyntaxException | UnsupportedSenderException | InvalidNodeException e) {
             e.printStackTrace();
         }
 

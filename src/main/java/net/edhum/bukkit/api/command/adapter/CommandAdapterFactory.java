@@ -4,5 +4,5 @@ import net.edhum.common.command.CommandTree;
 
 public interface CommandAdapterFactory {
 
-    BukkitCommandAdapter createBukkitCommandAdapter(CommandTree tree);
+    BukkitCommandAdapter createBukkitCommandAdapter(CommandTree command);
 }

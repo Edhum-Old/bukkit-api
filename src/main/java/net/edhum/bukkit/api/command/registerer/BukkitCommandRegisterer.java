@@ -8,6 +8,7 @@ import net.edhum.common.command.CommandTree;
 import net.edhum.common.command.registerer.CommandRegisterer;
 import net.edhum.common.plugin.annotations.PluginLogger;
 import net.edhum.common.plugin.annotations.PluginName;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
 
 import java.util.logging.Logger;
@@ -38,7 +39,18 @@ public class BukkitCommandRegisterer implements CommandRegisterer {
     }
 
     @Override
-    public void registerCommand(CommandTree tree) {
-        this.commandMap.register(pluginName, commandAdapterFactory.createBukkitCommandAdapter(tree));
+    public void registerCommand(CommandTree command) {
+        this.commandMap.register(pluginName, commandAdapterFactory.createBukkitCommandAdapter(command));
+    }
+
+    @Override
+    public void unregisterCommand(String commandName) {
+        Command command = this.commandMap.getCommand(commandName);
+
+        if (command == null) {
+            throw new IllegalArgumentException(String.format("No command with name %s has been found", commandName));
+        }
+
+        command.unregister(this.commandMap);
     }
 }

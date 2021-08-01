@@ -9,6 +9,8 @@ import net.edhum.bukkit.api.scheduler.SchedulerModule;
 import net.edhum.common.plugin.annotations.PluginDataFolder;
 import net.edhum.common.plugin.annotations.PluginLogger;
 import net.edhum.common.plugin.annotations.PluginName;
+import org.bukkit.Server;
+import org.bukkit.command.CommandMap;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.scheduler.BukkitScheduler;
@@ -27,8 +29,11 @@ public class PluginModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(Plugin.class).toInstance(this.plugin);
+        bind(Server.class).toInstance(this.plugin.getServer());
         bind(PluginManager.class).toInstance(this.plugin.getServer().getPluginManager());
         bind(BukkitScheduler.class).toInstance(this.plugin.getServer().getScheduler());
+
+        bind(CommandMap.class).toInstance(this.plugin.getServer().getCommandMap());
 
         install(new CommandModule());
         install(new ConsoleModule());

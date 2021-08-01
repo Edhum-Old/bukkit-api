@@ -22,14 +22,4 @@ public class CommandModule extends AbstractModule {
 
         bind(CommandRegisterer.class).to(BukkitCommandRegisterer.class);
     }
-
-    /*@CheckedProvides(CommandMapProvider.class)
-    public CommandMap provideCommandMap(PluginManager pluginManager) throws NoSuchFieldException, IllegalAccessException {
-        Field commandMapField = SimplePluginManager.class.getDeclaredField("commandMap");
-        commandMapField.setAccessible(true);
-        CommandMap commandMap = (CommandMap) commandMapField.get(pluginManager);
-        commandMapField.setAccessible(false);
-
-        return commandMap;
-    }*/
 }

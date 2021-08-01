@@ -24,7 +24,12 @@ public class BukkitScheduler implements Scheduler {
 
     @Override
     public void runTaskLater(Runnable runnable, long delay, TimeUnit timeUnit) {
-        this.scheduler.runTaskLater(this.plugin, runnable, toTicks(delay, timeUnit));
+        this.runTaskLater(runnable, toTicks(delay, timeUnit));
+    }
+
+    @Override
+    public void runTaskLater(Runnable runnable, long delay) {
+        this.scheduler.runTaskLater(this.plugin, runnable, delay);
     }
 
     @Override

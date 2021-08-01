@@ -8,7 +8,6 @@ import net.edhum.common.plugin.annotations.PluginName;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
 
-// TODO: 01/08/2021 Unregister vanilla commands too
 public class BukkitCommandRegisterer implements CommandRegisterer {
 
     private final CommandMap commandMap;

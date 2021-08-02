@@ -5,6 +5,7 @@ import com.google.inject.Provides;
 import net.edhum.bukkit.api.command.CommandModule;
 import net.edhum.bukkit.api.console.ConsoleModule;
 import net.edhum.bukkit.api.listener.ListenerModule;
+import net.edhum.bukkit.api.message.MessageModule;
 import net.edhum.bukkit.api.scheduler.SchedulerModule;
 import net.edhum.common.plugin.annotations.PluginDataFolder;
 import net.edhum.common.plugin.annotations.PluginLogger;
@@ -18,11 +19,11 @@ import org.bukkit.scheduler.BukkitScheduler;
 import java.nio.file.Path;
 import java.util.logging.Logger;
 
-public class PluginModule extends AbstractModule {
+public class BukkitModule extends AbstractModule {
 
     private final Plugin plugin;
 
-    public PluginModule(Plugin plugin) {
+    public BukkitModule(Plugin plugin) {
         this.plugin = plugin;
     }
 
@@ -38,6 +39,7 @@ public class PluginModule extends AbstractModule {
         install(new CommandModule());
         install(new ConsoleModule());
         install(new ListenerModule());
+        install(new MessageModule());
         install(new SchedulerModule());
     }
 

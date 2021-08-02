@@ -6,8 +6,10 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
 import net.edhum.bukkit.api.command.adapter.CommandAdapterFactory;
 import net.edhum.bukkit.api.command.registerer.BukkitCommandRegisterer;
 import net.edhum.bukkit.api.command.sender.BukkitCommandSenderProvider;
+import net.edhum.bukkit.api.command.sender.BukkitConsoleCommandSender;
 import net.edhum.common.command.registerer.CommandRegisterer;
 import net.edhum.common.command.sender.CommandSenderProvider;
+import net.edhum.common.command.sender.ConsoleCommandSender;
 import org.bukkit.command.CommandSender;
 
 public class CommandModule extends AbstractModule {
@@ -21,5 +23,7 @@ public class CommandModule extends AbstractModule {
         }).to(BukkitCommandSenderProvider.class);
 
         bind(CommandRegisterer.class).to(BukkitCommandRegisterer.class);
+
+        bind(ConsoleCommandSender.class).to(BukkitConsoleCommandSender.class);
     }
 }

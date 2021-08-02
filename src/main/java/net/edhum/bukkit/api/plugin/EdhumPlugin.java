@@ -3,8 +3,8 @@ package net.edhum.bukkit.api.plugin;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import net.edhum.bukkit.api.plugin.bootstrap.BukkitPluginBootstrap;
-import net.edhum.common.command.CommandPostExecutor;
 import net.edhum.common.command.disabler.CommandDisabler;
+import net.edhum.common.command.enabler.CommandEnabler;
 import net.edhum.common.listener.ListenerPostExecutor;
 import net.edhum.common.persistence.sql.SQLPostExecutor;
 import net.edhum.common.persistence.sql.exception.SQLInitialisationException;
@@ -31,7 +31,7 @@ public abstract class EdhumPlugin extends JavaPlugin implements ModularPlugin {
             this.logger = injector.getInstance(new Key<>(PluginLogger.class) {
             });
 
-            injector.getInstance(CommandPostExecutor.class).init();
+            injector.getInstance(CommandEnabler.class).enableCommands();
             injector.getInstance(new Key<ListenerPostExecutor<Listener>>() {
             }).registerListeners();
 

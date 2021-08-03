@@ -40,9 +40,21 @@ public abstract class EdhumPlugin extends JavaPlugin implements ModularPlugin {
             injector.getInstance(Scheduler.class).runTaskLater(() -> injector.getInstance(CommandDisabler.class).disableCommands(), 1); // Workaround to wait for the server to load completely (See https://www.spigotmc.org/threads/server-finish-load-up-event.331213/)
 
             this.logger.info("Plugin enabled successfully");
-        } catch (SQLInitialisationException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
+
+        /*try {
+            BukkitPluginBootstrap bootstrap = new BukkitPluginBootstrap();
+            injector = bootstrap.bootstrap(this);
+
+            this.logger = injector.getInstance(new Key<>(PluginLogger.class) {
+            });
+
+            this.logger.info("Plugin enabled successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }*/
     }
 
     @Override

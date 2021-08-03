@@ -16,7 +16,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 
 public class GroupPermissionModule extends AbstractModule {
@@ -39,7 +39,7 @@ public class GroupPermissionModule extends AbstractModule {
             Yaml yaml = new Yaml();
             Map<String, Collection<String>> content = yaml.load(in);
 
-            Map<Group, Collection<String>> permissionMap = new HashMap<>();
+            Map<Group, Collection<String>> permissionMap = new EnumMap<>(Group.class);
 
             if (content != null) {
                 for (Map.Entry<String, Collection<String>> entry : content.entrySet()) {

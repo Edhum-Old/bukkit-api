@@ -8,7 +8,7 @@ import javax.inject.Named;
 import java.util.Collection;
 import java.util.UUID;
 
-public interface BukkitReceiverContextFactory extends ReceiverContextFactory {
+public interface BukkitReceiverContextFactory {
 
     @Named("broadcast")
     ReceiverContext broadcast(Collection<UUID> excepts);

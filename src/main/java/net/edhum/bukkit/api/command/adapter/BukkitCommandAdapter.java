@@ -2,6 +2,7 @@ package net.edhum.bukkit.api.command.adapter;
 
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
+import net.edhum.common.command.CommandNode;
 import net.edhum.common.command.CommandTree;
 import net.edhum.common.command.argument.exception.ArgumentException;
 import net.edhum.common.command.dispatcher.CommandDispatcher;
@@ -11,6 +12,10 @@ import net.edhum.common.command.execution.exceptions.InvalidSyntaxException;
 import net.edhum.common.command.execution.exceptions.UnknownNodeException;
 import net.edhum.common.command.sender.CommandSenderProvider;
 import net.edhum.common.command.sender.exceptions.UnsupportedSenderException;
+import net.edhum.common.message.Message;
+import net.edhum.common.message.MessageBuilderFactory;
+import net.edhum.common.message.context.receiver.ReceiverContextFactory;
+import net.edhum.common.message.context.writer.WriterContextFactory;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.defaults.BukkitCommand;
 
@@ -22,38 +27,46 @@ public class BukkitCommandAdapter extends BukkitCommand {
 
     private final CommandSenderProvider<CommandSender> commandSenderProvider;
     private final CommandDispatcher commandDispatcher;
+    private final Messages messages;
 
     private final CommandTree tree;
 
     @Inject
     public BukkitCommandAdapter(CommandSenderProvider<CommandSender> commandSenderProvider,
                                 CommandDispatcher commandDispatcher,
+                                Messages messages,
                                 @Assisted CommandTree tree) {
         super(tree.getRoot().getCommand().getName());
 
         this.commandSenderProvider = commandSenderProvider;
         this.commandDispatcher = commandDispatcher;
+        this.messages = messages;
 
         this.tree = tree;
     }
 
-    // TODO: 27/07/2021 Error messages
     @Override
     public boolean execute(@Nonnull CommandSender sender, @Nonnull String commandLabel, @Nonnull String[] args) {
+        net.edhum.common.command.sender.CommandSender edhumSender;
+
         try {
-            this.commandDispatcher.dispatchExecution(this.tree, this.commandSenderProvider.get(sender), args);
-        } catch (UnknownNodeException e) {
-            e.printStackTrace();
-        } catch (InvalidPermissionException e) {
-            e.printStackTrace();
+            edhumSender = this.commandSenderProvider.get(sender);
         } catch (UnsupportedSenderException e) {
-            e.printStackTrace();
+            return true;
+        }
+
+        try {
+            this.commandDispatcher.dispatchExecution(this.tree, edhumSender, args);
+        } catch (UnknownNodeException e) {
+            this.messages.unknownNode(edhumSender, e.getNode());
+        } catch (InvalidPermissionException e) {
+            this.messages.invalidPermission(edhumSender);
         } catch (InvalidSyntaxException e) {
-            e.printStackTrace();
+            this.messages.invalidSyntax(edhumSender, e.getNode());
         } catch (ArgumentException e) {
-            e.printStackTrace();
+            this.messages.invalidArgument(edhumSender, e.getError());
         } catch (InvalidRequirementException e) {
-            e.printStackTrace();
+            this.messages.invalidRequirement(edhumSender, e.getError());
         }
 
         return true;
@@ -68,6 +81,48 @@ public class BukkitCommandAdapter extends BukkitCommand {
             e.printStackTrace();
 
             return Collections.emptyList();
+        }
+    }
+
+    private static class Messages {
+
+        private final MessageBuilderFactory messageBuilderFactory;
+        private final ReceiverContextFactory receiverContextFactory;
+        private final WriterContextFactory writerContextFactory;
+
+        @Inject
+        public Messages(MessageBuilderFactory messageBuilderFactory, ReceiverContextFactory receiverContextFactory, WriterContextFactory writerContextFactory) {
+            this.messageBuilderFactory = messageBuilderFactory;
+            this.receiverContextFactory = receiverContextFactory;
+            this.writerContextFactory = writerContextFactory;
+        }
+
+        public void unknownNode(net.edhum.common.command.sender.CommandSender sender, CommandNode node) {
+            this.messageBuilderFactory.createMessageBuilder()
+                    .withPath("command.unknown_node")
+                    .withArgument("node", node)
+                    .build().write(this.receiverContextFactory.single(sender), this.writerContextFactory.chat());
+        }
+
+        public void invalidPermission(net.edhum.common.command.sender.CommandSender sender) {
+            this.messageBuilderFactory.createMessageBuilder()
+                    .withPath("command.invalid_permissions")
+                    .build().write(this.receiverContextFactory.single(sender), this.writerContextFactory.chat());
+        }
+
+        public void invalidSyntax(net.edhum.common.command.sender.CommandSender sender, CommandNode node) {
+            this.messageBuilderFactory.createMessageBuilder()
+                    .withPath("command.invalid_syntax")
+                    .withArgument("node", node)
+                    .build().write(this.receiverContextFactory.single(sender), this.writerContextFactory.chat());
+        }
+
+        public void invalidArgument(net.edhum.common.command.sender.CommandSender sender, Message error) {
+            error.write(this.receiverContextFactory.single(sender), this.writerContextFactory.chat());
+        }
+
+        public void invalidRequirement(net.edhum.common.command.sender.CommandSender sender, Message error) {
+            error.write(this.receiverContextFactory.single(sender), this.writerContextFactory.chat());
         }
     }
 }

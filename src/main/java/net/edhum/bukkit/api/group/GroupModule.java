@@ -16,7 +16,7 @@ public class GroupModule extends AbstractModule {
     protected void configure() {
         install(new FactoryModuleBuilder()
                 .implement(new TypeLiteral<Predicate<Group>>() {}, Names.named("id"), GroupIdFilter.class)
-                .implement(new TypeLiteral<Predicate<Group>>() {}, Names.named("tag"), GroupNameFilter.class)
+                .implement(new TypeLiteral<Predicate<Group>>() {}, Names.named("name"), GroupNameFilter.class)
                 .build(GroupFilterFactory.class));
     }
 }

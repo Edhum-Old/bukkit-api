@@ -10,6 +10,7 @@ import org.bukkit.inventory.Inventory;
 
 import java.util.Optional;
 
+// TODO: 06/08/2021 Create a class which handles the gui content
 public class GUI {
 
     private final Message name;
@@ -62,5 +63,9 @@ public class GUI {
         }
 
         this.add(item, slot);
+    }
+    
+    public Optional<Item> get(int slot) {
+        return Optional.ofNullable(this.content[slot]);
     }
 }

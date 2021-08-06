@@ -32,8 +32,11 @@ public class Item {
         ItemStack itemStack = new ItemStack(this.material);
 
         ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.displayName(Component.text(name.get(player.getLanguage())));
-        itemMeta.lore(Collections.singletonList(Component.text(lore.get(player.getLanguage()))));
+        itemMeta.displayName(Component.text(this.name.get(player.getLanguage())));
+
+        if (this.lore != null) {
+            itemMeta.lore(Collections.singletonList(Component.text(this.lore.get(player.getLanguage()))));
+        }
 
         itemStack.setItemMeta(itemMeta);
 

@@ -1,6 +1,7 @@
 package net.edhum.bukkit.api.plugin.bootstrap;
 
 import com.google.inject.AbstractModule;
+import net.edhum.bukkit.api.configuration.ConfigurationModule;
 import net.edhum.bukkit.api.group.GroupModule;
 import net.edhum.bukkit.api.gui.GUIModule;
 import net.edhum.bukkit.api.handshake.HandshakeModule;
@@ -11,6 +12,7 @@ public class ServerModule extends AbstractModule {
 
     @Override
     protected void configure() {
+        install(new ConfigurationModule());
         install(new GroupModule());
         install(new GUIModule());
         install(new HandshakeModule());

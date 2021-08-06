@@ -40,8 +40,14 @@ public class GUI {
         org.bukkit.entity.Player bukkitPlayer = Optional.ofNullable(Bukkit.getPlayer(player.getUniqueId())).orElseThrow();
 
         Inventory inventory = Bukkit.createInventory(bukkitPlayer, this.type, Component.text(name));
+
         for (int i = 0; i < content.length; i++) {
-            inventory.setItem(i, this.content[i].build(player));
+            Optional<Item> optionalItem = this.get(i);
+
+            if (optionalItem.isPresent()) {
+                Item item = optionalItem.get();
+                inventory.setItem(i, item.build(player));
+            }
         }
 
         return inventory;

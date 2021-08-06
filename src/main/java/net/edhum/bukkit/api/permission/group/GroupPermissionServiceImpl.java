@@ -22,10 +22,10 @@ public class GroupPermissionServiceImpl implements GroupPermissionService {
             permissions = permissionsProvider.get();
         } catch (Exception e) {
             e.printStackTrace();
-            logger.warning("An exception has occurred while trying to read the group permissions file." + " " +
+            logger.warning("An exception has occurred while trying to read the group permissions file." +
                     "The default group permissions will be used.");
 
-            permissions = UnavailableGroupPermissionMap.getDefaultCityPermissionList();
+            permissions = UnavailableGroupPermissionMap.getDefaultGroupPermissionMap();
         }
 
         this.permissions = permissions;

@@ -21,7 +21,7 @@ import java.util.Map;
 
 public class GroupPermissionModule extends AbstractModule {
 
-    private static final String GROUP_PERMISSIONS_FILE_NAME = "group.yml";
+    private static final String GROUP_PERMISSIONS_FILE_NAME = "groups.yml";
 
     @Override
     protected void configure() {

@@ -19,6 +19,10 @@ public class GroupPermissionMap {
     }
 
     public Collection<String> getPermissions(Group group) {
+        if (!this.permissions.containsKey(group)) {
+            throw new IllegalArgumentException("Illegal group");
+        }
+
         return this.permissions.get(group);
     }
 }

@@ -5,17 +5,23 @@ import net.edhum.bukkit.api.group.Group;
 import net.edhum.bukkit.api.group.filter.GroupFilterFactory;
 import net.edhum.bukkit.api.permission.PermissionService;
 import net.edhum.bukkit.api.player.newcomer.PlayerNewcomerConfiguration;
+import net.edhum.bukkit.api.player.newcomer.PlayerNewcomerConfigurationProvider;
+import net.edhum.bukkit.api.player.newcomer.UnavailablePlayerNewcomerConfiguration;
 import net.edhum.bukkit.api.player.persistence.PlayerBean;
 import net.edhum.bukkit.api.player.persistence.PlayerDAO;
 import net.edhum.bukkit.api.player.repository.PlayerRepository;
 import net.edhum.bukkit.api.player.repository.filter.PlayerFilterFactory;
 import net.edhum.common.i18n.Language;
 import net.edhum.common.i18n.filter.LanguageFilterFactory;
+import net.edhum.common.plugin.annotations.PluginLogger;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.logging.Logger;
 
+// TODO: 06/08/2021 Separate methods between multiple classes
 public class PlayerServiceImpl implements PlayerService {
 
     private final PlayerDAO playerDAO;
@@ -27,17 +33,31 @@ public class PlayerServiceImpl implements PlayerService {
     private final PermissionService permissionService;
 
     @Inject
-    public PlayerServiceImpl(PlayerDAO playerDAO,
+    public PlayerServiceImpl(@PluginLogger Logger logger,
+                             PlayerNewcomerConfigurationProvider playerNewcomerConfigurationProvider,
+                             PlayerDAO playerDAO,
                              PlayerRepository playerRepository,
                              PlayerFilterFactory playerFilterFactory,
-                             PlayerNewcomerConfiguration playerNewcomerConfiguration,
                              GroupFilterFactory groupFilterFactory,
                              LanguageFilterFactory languageFilterFactory,
                              PermissionService permissionService) {
+        PlayerNewcomerConfiguration playerNewcomerConfiguration;
+
+        try {
+            playerNewcomerConfiguration = playerNewcomerConfigurationProvider.get();
+        } catch (IOException e) {
+            e.printStackTrace();
+            logger.warning("An exception occurred while attempting to get the player configuration. " +
+                    "The default one will be used instead");
+
+            playerNewcomerConfiguration = UnavailablePlayerNewcomerConfiguration.getDefaultConfiguration();
+        }
+
+        this.playerNewcomerConfiguration = playerNewcomerConfiguration;
+
         this.playerDAO = playerDAO;
         this.playerRepository = playerRepository;
         this.playerFilterFactory = playerFilterFactory;
-        this.playerNewcomerConfiguration = playerNewcomerConfiguration;
         this.groupFilterFactory = groupFilterFactory;
         this.languageFilterFactory = languageFilterFactory;
         this.permissionService = permissionService;

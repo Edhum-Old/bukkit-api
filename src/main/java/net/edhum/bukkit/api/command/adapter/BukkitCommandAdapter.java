@@ -110,7 +110,7 @@ public class BukkitCommandAdapter extends BukkitCommand {
         public void invalidPermission(net.edhum.common.command.sender.CommandSender sender) {
             this.messageService.write(
                     new MessageBuilder()
-                            .withPath("command.invalid_permissions")
+                            .withPath("command.invalid_permission")
                             .build(),
                     this.receiverContextFactory.single(sender), this.writerContextFactory.chat());
         }

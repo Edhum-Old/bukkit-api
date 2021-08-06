@@ -1,6 +1,7 @@
-package net.edhum.bukkit.api.gui;
+package net.edhum.bukkit.api.gui.repository;
 
 import com.google.inject.Inject;
+import net.edhum.bukkit.api.gui.GUI;
 import net.edhum.bukkit.api.player.Player;
 
 import java.util.HashMap;

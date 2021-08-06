@@ -1,12 +1,10 @@
 package net.edhum.bukkit.api.gui;
 
-import net.edhum.bukkit.api.gui.item.Item;
+import net.edhum.bukkit.api.item.Item;
 import net.edhum.bukkit.api.player.Player;
 import net.edhum.common.message.Message;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.inventory.Inventory;
 
 import java.util.Optional;
 
@@ -23,34 +21,9 @@ public class GUI {
         this.content = new Item[type.getDefaultSize()];
     }
 
-    public void open(Player player) {
-        Inventory inventory = this.build(player);
-
-        org.bukkit.entity.Player bukkitPlayer = Optional.ofNullable(Bukkit.getPlayer(player.getUniqueId())).orElseThrow();
-        bukkitPlayer.openInventory(inventory);
-    }
-
     public void close(Player player) {
         org.bukkit.entity.Player bukkitPlayer = Optional.ofNullable(Bukkit.getPlayer(player.getUniqueId())).orElseThrow();
         bukkitPlayer.closeInventory();
-    }
-
-    private Inventory build(Player player) {
-        String name = this.name.get(player.getLanguage());
-        org.bukkit.entity.Player bukkitPlayer = Optional.ofNullable(Bukkit.getPlayer(player.getUniqueId())).orElseThrow();
-
-        Inventory inventory = Bukkit.createInventory(bukkitPlayer, this.type, Component.text(name));
-
-        for (int i = 0; i < content.length; i++) {
-            Optional<Item> optionalItem = this.get(i);
-
-            if (optionalItem.isPresent()) {
-                Item item = optionalItem.get();
-                inventory.setItem(i, item.build(player));
-            }
-        }
-
-        return inventory;
     }
 
     public void add(Item item, int slot) {
@@ -73,5 +46,17 @@ public class GUI {
     
     public Optional<Item> get(int slot) {
         return Optional.ofNullable(this.content[slot]);
+    }
+
+    public Message getName() {
+        return this.name;
+    }
+
+    public InventoryType getType() {
+        return type;
+    }
+
+    public Item[] getContent() {
+        return content;
     }
 }

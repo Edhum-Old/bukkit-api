@@ -2,7 +2,7 @@ package net.edhum.bukkit.api.gui;
 
 import net.edhum.bukkit.api.player.Player;
 
-public interface GUIManager {
+public interface GUIService {
 
     void open(GUI gui, Player player);
 

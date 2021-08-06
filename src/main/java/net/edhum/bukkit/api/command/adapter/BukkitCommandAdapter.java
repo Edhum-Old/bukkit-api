@@ -13,7 +13,8 @@ import net.edhum.common.command.execution.exceptions.UnknownNodeException;
 import net.edhum.common.command.sender.CommandSenderProvider;
 import net.edhum.common.command.sender.exceptions.UnsupportedSenderException;
 import net.edhum.common.message.Message;
-import net.edhum.common.message.MessageBuilderFactory;
+import net.edhum.common.message.MessageBuilder;
+import net.edhum.common.message.MessageService;
 import net.edhum.common.message.context.receiver.ReceiverContextFactory;
 import net.edhum.common.message.context.writer.WriterContextFactory;
 import org.bukkit.command.CommandSender;
@@ -86,43 +87,49 @@ public class BukkitCommandAdapter extends BukkitCommand {
 
     private static class Messages {
 
-        private final MessageBuilderFactory messageBuilderFactory;
+        private final MessageService messageService;
         private final ReceiverContextFactory receiverContextFactory;
         private final WriterContextFactory writerContextFactory;
 
         @Inject
-        public Messages(MessageBuilderFactory messageBuilderFactory, ReceiverContextFactory receiverContextFactory, WriterContextFactory writerContextFactory) {
-            this.messageBuilderFactory = messageBuilderFactory;
+        public Messages(MessageService messageService, ReceiverContextFactory receiverContextFactory, WriterContextFactory writerContextFactory) {
+            this.messageService = messageService;
             this.receiverContextFactory = receiverContextFactory;
             this.writerContextFactory = writerContextFactory;
         }
 
         public void unknownNode(net.edhum.common.command.sender.CommandSender sender, CommandNode node) {
-            this.messageBuilderFactory.createMessageBuilder()
-                    .withPath("command.unknown_node")
-                    .withArgument("node", node)
-                    .build().write(this.receiverContextFactory.single(sender), this.writerContextFactory.chat());
+            this.messageService.write(
+                    new MessageBuilder()
+                            .withPath("command.unknown_node")
+                            .withArgument("node", node)
+                            .build(),
+                    this.receiverContextFactory.single(sender), this.writerContextFactory.chat());
         }
 
         public void invalidPermission(net.edhum.common.command.sender.CommandSender sender) {
-            this.messageBuilderFactory.createMessageBuilder()
-                    .withPath("command.invalid_permissions")
-                    .build().write(this.receiverContextFactory.single(sender), this.writerContextFactory.chat());
+            this.messageService.write(
+                    new MessageBuilder()
+                            .withPath("command.invalid_permissions")
+                            .build(),
+                    this.receiverContextFactory.single(sender), this.writerContextFactory.chat());
         }
 
         public void invalidSyntax(net.edhum.common.command.sender.CommandSender sender, CommandNode node) {
-            this.messageBuilderFactory.createMessageBuilder()
-                    .withPath("command.invalid_syntax")
-                    .withArgument("node", node)
-                    .build().write(this.receiverContextFactory.single(sender), this.writerContextFactory.chat());
+            this.messageService.write(
+                    new MessageBuilder()
+                            .withPath("command.invalid_syntax")
+                            .withArgument("node", node)
+                            .build(),
+                    this.receiverContextFactory.single(sender), this.writerContextFactory.chat());
         }
 
         public void invalidArgument(net.edhum.common.command.sender.CommandSender sender, Message error) {
-            error.write(this.receiverContextFactory.single(sender), this.writerContextFactory.chat());
+            this.messageService.write(error, this.receiverContextFactory.single(sender), this.writerContextFactory.chat());
         }
 
         public void invalidRequirement(net.edhum.common.command.sender.CommandSender sender, Message error) {
-            error.write(this.receiverContextFactory.single(sender), this.writerContextFactory.chat());
+            this.messageService.write(error, this.receiverContextFactory.single(sender), this.writerContextFactory.chat());
         }
     }
 }

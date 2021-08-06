@@ -1,6 +1,5 @@
-package net.edhum.bukkit.api.gui.item;
+package net.edhum.bukkit.api.item;
 
-import net.edhum.bukkit.api.gui.GUI;
 import net.edhum.bukkit.api.player.Player;
 import net.edhum.common.message.Message;
 import org.bukkit.Material;
@@ -36,8 +35,8 @@ public class ItemBuilder {
         return this;
     }
 
-    public ItemBuilder link(GUI link) {
-        this.action = this.action.andThen(link::open);
+    public ItemBuilder withAction(Consumer<Player> action) {
+        this.action = this.action.andThen(action);
 
         return this;
     }

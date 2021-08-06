@@ -1,6 +1,8 @@
 package net.edhum.bukkit.api.gui;
 
 import com.google.inject.AbstractModule;
+import net.edhum.bukkit.api.gui.repository.GUIRepository;
+import net.edhum.bukkit.api.gui.repository.GUIRepositoryImpl;
 
 public class GUIModule extends AbstractModule {
 
